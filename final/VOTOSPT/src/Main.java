@@ -147,3 +147,81 @@ public class Main {
         return totalVotantes;
     }
 
+// Função que retorna o número de votos válidos a partir de um mapa de votos nacionais
+private static int getVotosValidos(Map<String, Integer> votosNacionais) {
+    int votosValidos = 0;
+
+    // Percorre o mapa de votos nacionais
+    for (Integer valor : votosNacionais.values()) {
+        // Atualiza o número de votos válidos com os votos do mapa
+        votosValidos += valor;
+    }
+
+    // Retorna o número de votos válidos
+    return votosValidos;
+}
+
+// Retorna o número de votos brancos a partir de um mapa de votos nacionais
+private static int getVotosBrancos(Map<String, Integer> votosNacionais) {
+    // Retornar o número de votos brancos do mapa de votos nacionais
+    return votosNacionais.getOrDefault("Brancos", 0);
+}
+
+// Retorna o número de votos nulos a partir de um mapa de votos nacionais
+private static int getVotosNulos(Map<String, Integer> votosNacionais) {
+    // Retorna o número de votos nulos do mapa de votos nacionais
+    return votosNacionais.getOrDefault("Nulos", 0);
+}
+}
+
+// Calcula os resultados agregados de um círculo eleitoral
+class SomaVotos {
+private int totalVotantes;
+private int votosValidos;
+private int votosBrancos;
+private int votosNulos;
+
+// Construtor da classe
+public SomaVotos(VotosCirculoEleitoral circuloEleitoral) {
+    // Chama o método calcularResultados para calcular os resultados agregados
+    calcularResultados(circuloEleitoral);
+}
+
+// Método responsável por calcular os resultados agregados
+private void calcularResultados(VotosCirculoEleitoral circuloEleitoral) {
+    totalVotantes = 0;
+    votosValidos = 0;
+    votosBrancos = 0;
+    votosNulos = 0;
+
+    // Percorre os concelhos do círculo eleitoral
+    for (VotosConcelho votosConcelho : circuloEleitoral.getVotosPorConcelho().values()) {
+        // Atualiza os votos válidos, brancos e nulos com os votos do concelho
+        for (Integer votos : votosConcelho.getVotosPorPartido().values()) {
+            votosValidos += votos;
+        }
+
+        votosBrancos += votosConcelho.getVotosPorPartido().getOrDefault("Brancos", 0);
+        votosNulos += votosConcelho.getVotosPorPartido().getOrDefault("Nulos", 0);
+    }
+
+    // Atualiza o total de votantes com os votos válidos, brancos e nulos
+    totalVotantes = votosValidos + votosBrancos + votosNulos;
+}
+
+public int getTotalVotantes() {
+    return totalVotantes;
+}
+
+public int getVotosValidos() {
+    return votosValidos;
+}
+
+public int getVotosBrancos() {
+    return votosBrancos;
+}
+
+public int getVotosNulos() {
+    return votosNulos;
+}
+}
